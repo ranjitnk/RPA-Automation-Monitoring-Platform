@@ -1,0 +1,215 @@
+# ============================================================================
+# Elasticsearch Configuration
+# ============================================================================
+# Configuration for UiPath Observability Platform logging cluster
+
+# ============================================================================
+# Cluster Settings
+# ============================================================================
+
+# Unique node name
+node.name: elasticsearch-node-1
+
+# Cluster name (all nodes must use same cluster name)
+cluster.name: uipath-observability
+
+# Node roles (data, master, ingest, ml)
+node.roles:
+  - master
+  - data
+  - ingest
+
+# ============================================================================
+# Discovery Settings
+# ============================================================================
+
+# Single-node cluster (for development/small deployments)
+discovery.type: single-node
+
+# For multi-node clusters, specify initial master nodes
+# discovery.seed_hosts: ["elasticsearch-1", "elasticsearch-2", "elasticsearch-3"]
+# cluster.initial_master_nodes: ["elasticsearch-1", "elasticsearch-2", "elasticsearch-3"]
+
+# Cluster formation timeout
+cluster.join.timeout: 30s
+
+# ============================================================================
+# Network Settings
+# ============================================================================
+
+# Bind to all interfaces (Docker container)
+network.host: 0.0.0.0
+
+# HTTP port
+http.port: 9200
+
+# Transport port (node communication)
+transport.port: 9300
+
+# Enable CORS for development
+http.cors.enabled: false
+# http.cors.allow-origin: "*"
+# http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
+# http.cors.allow-headers: X-Requested-With, X-Auth-Token, Content-Type
+
+# ============================================================================
+# Security Settings
+# ============================================================================
+
+# Disable security for development (Docker isolated network)
+xpack.security.enabled: false
+
+# Enable only if security is enabled
+# xpack.security.enrollment.enabled: true
+# xpack.security.transport.ssl.enabled: true
+# xpack.security.transport.ssl.verification_mode: certificate
+# xpack.security.transport.ssl.keystore.path: certs/elastic-nodes.p12
+# xpack.security.transport.ssl.truststore.path: certs/elastic-nodes.p12
+# xpack.security.http.ssl.enabled: true
+# xpack.security.http.ssl.keystore.path: certs/elastic-nodes.p12
+# xpack.security.http.ssl.truststore.path: certs/elastic-nodes.p12
+
+# ============================================================================
+# Machine Learning Settings
+# ============================================================================
+
+# Enable machine learning
+xpack.ml.enabled: true
+
+# Max memory for ML jobs (percentage of node memory)
+# xpack.ml.max_open_jobs: 20
+# xpack.ml.memory_limit: 30%
+
+# ============================================================================
+# Monitoring & Metrics
+# ============================================================================
+
+# Enable internal monitoring
+xpack.monitoring.enabled: true
+
+# Collect metrics from Elasticsearch
+xpack.monitoring.collection.enabled: false
+
+# ============================================================================
+# JVM Memory Settings
+# ============================================================================
+
+# Memory is set via ES_JAVA_OPTS environment variable
+# For 512MB heap: -Xms512m -Xmx512m
+# For 2GB heap: -Xms2g -Xmx2g
+# For production: Set to 50% of available RAM, maximum 30GB
+
+# ============================================================================
+# Path Settings
+# ============================================================================
+
+# Data directory
+path.data: /usr/share/elasticsearch/data
+
+# Logs directory
+path.logs: /usr/share/elasticsearch/logs
+
+# ============================================================================
+# Thread Pool Settings
+# ============================================================================
+
+# Thread pool for searching
+# thread_pool.search.queue_size: 1000
+
+# Thread pool for indexing
+# thread_pool.write.queue_size: 200
+
+# ============================================================================
+# Index Settings
+# ============================================================================
+
+# Refresh interval (how often indices are refreshed for searching)
+indices.memory.index_buffer_size: 30%
+
+# Index codec (best_compression for production)
+# indices.codec: best_compression
+
+# ============================================================================
+# Index Lifecycle Management (ILM)
+# ============================================================================
+
+# Enable ILM for automatic index management
+# xpack.ilm.enabled: true
+
+# ============================================================================
+# Logging Settings
+# ============================================================================
+
+# Root logger level
+logger.root: warn
+
+# Slower log threshold (log queries slower than this)
+index.search.slowlog.threshold.query.warn: 10s
+index.search.slowlog.threshold.query.info: 5s
+index.search.slowlog.threshold.query.debug: 2s
+index.search.slowlog.threshold.fetch.warn: 1s
+
+# Indexing slowlog
+index.indexing.slowlog.threshold.index.warn: 10s
+index.indexing.slowlog.threshold.index.info: 5s
+index.indexing.slowlog.threshold.index.debug: 2s
+
+# ============================================================================
+# Action Settings
+# ============================================================================
+
+# Auto-create indices
+action.auto_create_index: true
+
+# Destructive operations require explicit index names
+# action.destructive_requires_name: true
+
+# ============================================================================
+# Repository Settings (Snapshots)
+# ============================================================================
+
+# Enable snapshots for backup
+# repositories.url.allowed_urls: ["file:///backup/*"]
+
+# ============================================================================
+# Ingest Pipeline Settings
+# ============================================================================
+
+# Allow ingest pipeline on this node
+node.ingest: true
+
+# ============================================================================
+# Cross-Cluster Search
+# ============================================================================
+
+# search.remote.connect: false
+
+# ============================================================================
+# Bootstrap Configuration
+# ============================================================================
+
+# Memory lock (lock memory pages to prevent swapping)
+# bootstrap.memory_lock: true
+
+# ============================================================================
+# Development Settings (Disable some safety checks)
+# ============================================================================
+
+# Disable bootstrap checks in development
+# bootstrap.system_call_filter: false
+
+# ============================================================================
+# Audit Settings
+# ============================================================================
+
+# xpack.security.audit.enabled: false
+
+# ============================================================================
+# Watcher Settings
+# ============================================================================
+
+# xpack.watcher.enabled: true
+
+# ============================================================================
+# EOF
+# ============================================================================

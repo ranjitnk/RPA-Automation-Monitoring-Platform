@@ -1,0 +1,198 @@
+# ============================================================================
+# Elasticsearch Production Configuration
+# ============================================================================
+# Optimized for production deployments with security and performance tuning
+
+# ============================================================================
+# Cluster Settings
+# ============================================================================
+
+node.name: elasticsearch-prod-1
+cluster.name: uipath-observability-prod
+node.roles: [master, data, ingest]
+
+# ============================================================================
+# Discovery Settings (Production Multi-Node)
+# ============================================================================
+
+discovery.type: single-node
+
+# For production multi-node cluster, configure these:
+# discovery.seed_hosts: ["elasticsearch-1.internal", "elasticsearch-2.internal", "elasticsearch-3.internal"]
+# cluster.initial_master_nodes: ["elasticsearch-1", "elasticsearch-2", "elasticsearch-3"]
+# cluster.name: uipath-observability-prod
+
+# Node discovery timeout
+cluster.join.timeout: 60s
+
+# ============================================================================
+# Network Settings
+# ============================================================================
+
+network.host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+
+# ============================================================================
+# Security Settings (Production)
+# ============================================================================
+
+# ENABLE security in production
+xpack.security.enabled: true
+
+# SSL/TLS for transport (node-to-node communication)
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: certs/elastic-nodes.p12
+xpack.security.transport.ssl.truststore.path: certs/elastic-nodes.p12
+
+# SSL/TLS for HTTP
+xpack.security.http.ssl.enabled: true
+xpack.security.http.ssl.keystore.path: certs/elastic-nodes.p12
+xpack.security.http.ssl.truststore.path: certs/elastic-nodes.p12
+
+# Enrollment
+xpack.security.enrollment.enabled: true
+
+# ============================================================================
+# Machine Learning (Production)
+# ============================================================================
+
+xpack.ml.enabled: true
+xpack.ml.max_open_jobs: 10
+xpack.ml.memory_limit: 20%
+
+# ============================================================================
+# Monitoring (Production)
+# ============================================================================
+
+# Enable monitoring
+xpack.monitoring.enabled: true
+xpack.monitoring.collection.enabled: true
+
+# Send monitoring data to monitoring cluster
+# xpack.monitoring.exporters.id1.type: http
+# xpack.monitoring.exporters.id1.host: monitoring-cluster:9200
+
+# ============================================================================
+# JVM Configuration (Production)
+# ============================================================================
+
+# Set via ES_JAVA_OPTS environment variable
+# Example for 4GB heap: -Xms2g -Xmx2g
+# Set both Xms and Xmx to the same value
+# Never exceed 30GB per node
+# Set to 50% of available RAM on dedicated machine
+
+# ============================================================================
+# Path Settings
+# ============================================================================
+
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+
+# ============================================================================
+# Thread Pool Configuration (Production)
+# ============================================================================
+
+# Search thread pool
+thread_pool.search.size: 13
+thread_pool.search.queue_size: 1000
+
+# Write (index) thread pool
+thread_pool.write.size: 8
+thread_pool.write.queue_size: 200
+
+# Bulk operations
+thread_pool.bulk.size: 8
+thread_pool.bulk.queue_size: 300
+
+# ============================================================================
+# Index Settings (Production)
+# ============================================================================
+
+# Index buffer size (percentage of heap)
+indices.memory.index_buffer_size: 25%
+
+# Use best compression for indices
+indices.codec: best_compression
+
+# Maximum number of segments to use for search (lower = faster)
+index.max_result_window: 10000
+
+# ============================================================================
+# Index Lifecycle Management (ILM)
+# ============================================================================
+
+# Enable ILM for automatic log rotation
+xpack.ilm.enabled: true
+
+# ============================================================================
+# Logging (Production - Warnings Only)
+# ============================================================================
+
+logger.root: warn
+
+# Slow query logging (queries slower than 10s)
+index.search.slowlog.threshold.query.warn: 10s
+index.search.slowlog.threshold.query.info: 5s
+
+# Slow index logging (indexing slower than 5s)
+index.indexing.slowlog.threshold.index.warn: 5s
+index.indexing.slowlog.threshold.index.info: 2s
+
+# ============================================================================
+# Action Settings
+# ============================================================================
+
+action.auto_create_index: +uipath-*,+.watches,-*
+
+# Require explicit index names for destructive operations
+action.destructive_requires_name: true
+
+# ============================================================================
+# Repository Settings (Backup/Snapshots)
+# ============================================================================
+
+# Enable snapshot repositories
+# repositories.url.allowed_urls: ["file:///elasticsearch/backups/*", "s3://bucket/*"]
+
+# ============================================================================
+# Bootstrap Configuration
+# ============================================================================
+
+# Lock memory to prevent swapping (requires 'memlock' system setting)
+bootstrap.memory_lock: true
+
+# ============================================================================
+# Audit Logging
+# ============================================================================
+
+xpack.security.audit.enabled: true
+xpack.security.audit.logfile.level: info
+xpack.security.audit.logfile.events.include: [authentication_failure, authentication_success, realm_authentication_failure]
+
+# ============================================================================
+# Watcher Settings
+# ============================================================================
+
+xpack.watcher.enabled: true
+
+# ============================================================================
+# Cross-Cluster Search
+# ============================================================================
+
+search.remote.connect: false
+
+# ============================================================================
+# Snapshots & Restore
+# ============================================================================
+
+# Enable snapshots for disaster recovery
+# repositories.backup.type: s3
+# repositories.backup.settings.bucket: elasticsearch-backups
+# repositories.backup.settings.region: us-east-1
+
+# ============================================================================
+# EOF
+# ============================================================================
